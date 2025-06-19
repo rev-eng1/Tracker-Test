@@ -1,71 +1,32 @@
 <!DOCTYPE html>
 <html>
-<body onload="checkLocationPermission()">
-<p id="demo">Checking location permissions...</p>
-<button onclick="requestLocation()" id="requestBtn" style="display:none;">Get Precise Location</button>
+<body onload="getLocation()">
+
+
+<iframe src="https://giphy.com/embed/YTJXDIivNMPuNSMgc0" width="442" height="480" frameBorder="0" class ="giphy-embed" allowFullScreen></iframe><p><a -YTJXDIiVNMPUNSMgc0">via GIPHY</a></p>
+href="https://giphy.com/gifs/moodman-fail-life-backflip
+
+
+<p id="demo"></p>
+
 <script>
 const x = document.getElementById("demo");
-const btn = document.getElementById("requestBtn");
 
-async function checkLocationPermission() {
-  if (!navigator.geolocation) {
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
     x.innerHTML = "Geolocation is not supported by this browser.";
-    return;
   }
-
-  try {
-    // Check if permission is already granted
-    const permission = await navigator.permissions.query({name: 'geolocation'});
-    
-    if (permission.state === 'granted') {
-      // Permission already granted, get location without asking
-      navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else if (permission.state === 'denied') {
-      x.innerHTML = "Location access denied. Using approximate location instead.";
-      getLocationByIP();
-    } else {
-      // Permission not determined, show button to request
-      x.innerHTML = "Click button for precise location, or we'll use approximate location.";
-      btn.style.display = "block";
-      getLocationByIP(); // Get approximate location as fallback
-    }
-  } catch (error) {
-    x.innerHTML = "Could not check permissions. Using approximate location.";
-    getLocationByIP();
-  }
-}
-
-function requestLocation() {
-  navigator.geolocation.getCurrentPosition(showPosition, showError);
-  btn.style.display = "none";
 }
 
 function showPosition(position) {
-  x.innerHTML = "Precise Location (GPS):<br>" +
-               "Latitude: " + position.coords.latitude + 
-               "<br>Longitude: " + position.coords.longitude +
-               "<br>Accuracy: ±" + Math.round(position.coords.accuracy) + " meters";
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
 }
 
-function showError(error) {
-  x.innerHTML = "Location error: " + error.message + "<br>Using approximate location instead.";
-  getLocationByIP();
-}
-
-function getLocationByIP() {
-  fetch('https://ipapi.co/json/')
-    .then(response => response.json())
-    .then(data => {
-      x.innerHTML = "Approximate Location (via IP):<br>" +
-                   "Latitude: " + data.latitude + 
-                   "<br>Longitude: " + data.longitude +
-                   "<br>City: " + data.city +
-                   "<br>Country: " + data.country_name;
-    })
-    .catch(error => {
-      x.innerHTML = "Could not retrieve any location data.";
-    });
-}
 </script>
+
 </body>
 </html>
+
